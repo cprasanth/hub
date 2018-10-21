@@ -16,13 +16,13 @@ class NextWeek extends Component {
   }
   
   renderDays = () => {
-    const { classes, data, setData } = this.props;
+    const { classes, data, addReservation } = this.props;
     const strtWeek = dateFns.endOfWeek(this.state.currentWeek);
     const days = []
     let i;
     for(i=2; i<7; i++){
       const thisDay = dateFns.addDays(strtWeek, i)
-      days.push(<DayView data={data} setData={setData} val={thisDay} key={i} />)
+      days.push(<DayView data={data} addReservation={addReservation} val={thisDay} key={i} wkStart={dateFns.addDays(strtWeek, 2)} />)
     }
     return days;
   }
