@@ -35,20 +35,20 @@ const theme = createMuiTheme({
   },
 });
 
-const App = ({ value, addReservation }) => {
+const App = ({ value, addReservation, removeReservation }) => {
   return (
-  <MuiThemeProvider theme={theme}>
-    <CssBaseline />
-    <Router history={history}>
-      <Switch>
-        <Route path="/" exact render={(match) => <Home history={history} data={value} addReservation={addReservation}/>} />
-        <Route path="/login" render={(match) => <Login history={history} data={value}/>} />
-        <Redirect to="/" />
-      </Switch>
-    </Router>
-  </MuiThemeProvider>
-)
-  }
+    <MuiThemeProvider theme={theme}>
+      <CssBaseline />
+      <Router history={history}>
+        <Switch>
+          <Route path="/" exact render={(match) => <Home history={history} data={value} addReservation={addReservation} removeReservation={removeReservation} />} />
+          <Route path="/login" render={(match) => <Login history={history} data={value} />} />
+          <Redirect to="/" />
+        </Switch>
+      </Router>
+    </MuiThemeProvider>
+  )
+}
 
 firebase.initializeApp({
   databaseURL: "https://booking-8cc58.firebaseio.com",
@@ -57,7 +57,15 @@ firebase.initializeApp({
 
 const mapFirebaseToProps = (props, ref) => ({
   value: 'atkins/infra',
-  addReservation: (folder,day,val) => ref(`atkins/infra/${folder}/requests/${day}`).push(val) ,
+  addReservation: (folder, day, val) => ref(`atkins/infra/${folder}/requests/${day}`).push(val),
+  removeReservation: (folder, day, user) => ref(`atkins/infra/${folder}/requests/${day}`).orderByValue().equalTo(user).on('child_added', function(snapshot) {
+    snapshot.getRef().remove().then(
+      ()=>{
+        window.location.reload()
+      }
+    )
+    
+  })
 })
  
 export default connect(mapFirebaseToProps)(App)

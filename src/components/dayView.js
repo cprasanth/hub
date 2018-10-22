@@ -12,21 +12,25 @@ const styles = theme => {
 class DayView extends Component {
   state = {
     currentWeek: new Date(),
-    currentUser: localStorage.getItem('user'),
-    reserved: false,
+    currentUser: localStorage.getItem('user')
   }
 
   status = "not reserved";
   space = "";
   confirmChange = () => {
-    // if(this.state.reserved){
-      if(window.confirm("Cancel this reservation?")){
-        this.setState({'reserved': false});
+    if(this.status === "not reserved"){
+      if(window.confirm("Reserve a space?")){
         const currentFolder = dateFns.format(this.props.wkStart, "DDMMYYYY");
         const curDay = dateFns.format(this.props.val, "ddd").toLowerCase();
         this.props.addReservation(currentFolder, curDay, this.state.currentUser)
       }
-    // }
+    }else{
+      if(window.confirm("Cancel this reservation?")){
+        const currentFolder = dateFns.format(this.props.wkStart, "DDMMYYYY");
+        const curDay = dateFns.format(this.props.val, "ddd").toLowerCase();
+        this.props.removeReservation(currentFolder, curDay, this.state.currentUser)
+      }
+    }
   }
   render() {
     const { val, data, wkStart } = this.props;
@@ -49,7 +53,7 @@ class DayView extends Component {
                   this.space = ""; 
                 }
                 this.space += " " + key2;
-                // this.setState({'reserved': true})
+                this.status = "reserved";
               }
             }
 

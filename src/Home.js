@@ -25,15 +25,15 @@ class Home extends Component {
   componentWillUpdate(){
   }
   render() {
-    const { classes, data, addReservation } = this.props;
+    const { classes, data, addReservation, removeReservation } = this.props;
     return (
       <Grid container key="home">
         <Grid item xs={12}>
           {this.state &&
             <React.Fragment>
               <Typography variant="h4">Hello {this.state.user}</Typography>
-              <ThisWeek data={data} addReservation={addReservation} />
-              <NextWeek data={data} addReservation={addReservation} />
+              <ThisWeek data={data} addReservation={addReservation} removeReservation={removeReservation} />
+              <NextWeek data={data} addReservation={addReservation} removeReservation={removeReservation} />
             </React.Fragment>
           }
         </Grid>
