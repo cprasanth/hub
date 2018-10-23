@@ -6,7 +6,10 @@ import DayView from './dayView';
 
 const styles = theme => {
   return ({
-
+    nextWeek: {
+      clear: 'both',
+      marginTop: '150px',
+    }
   })
 };
 
@@ -28,13 +31,12 @@ class NextWeek extends Component {
   }
 
   render() {
+    const { classes } = this.props;
     return (
-      <Grid container key="home">
-        <Grid item xs={12}>
-          <Typography variant="h5">Next week</Typography>
-          <this.renderDays />
-        </Grid>
-      </Grid>
+      <section key="nextweek" className={classes.nextWeek}>
+        <Typography variant="h5">Next</Typography>
+        <this.renderDays />
+      </section>
     )
   }
 }

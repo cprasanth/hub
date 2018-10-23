@@ -31,7 +31,7 @@ class Home extends Component {
         <Grid item xs={12}>
           {this.state &&
             <React.Fragment>
-              <Typography variant="h4">Hello {this.state.user}</Typography>
+              {/* <Typography variant="h4">Hello {this.state.user}</Typography> */}
               <ThisWeek data={data} addReservation={addReservation} removeReservation={removeReservation} />
               <NextWeek data={data} addReservation={addReservation} removeReservation={removeReservation} />
             </React.Fragment>

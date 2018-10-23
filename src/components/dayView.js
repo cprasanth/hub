@@ -5,7 +5,14 @@ import dateFns from 'date-fns';
 
 const styles = theme => {
   return ({
-
+    dayView: {
+      border: 'solid 1px gray',
+      float: 'left',
+      margin: '10px',
+      height: '150px',
+      padding: '10px',
+      cursor: 'pointer',
+    }
   })
 };
 
@@ -33,7 +40,7 @@ class DayView extends Component {
     }
   }
   render() {
-    const { val, data, wkStart } = this.props;
+    const { val, data, wkStart, classes } = this.props;
     const formattedDay = dateFns.format(val, "ddd");
     const formattedDate = dateFns.format(val, "Do MMM");
     const currentFolder = dateFns.format(wkStart, "DDMMYYYY");
@@ -72,14 +79,11 @@ class DayView extends Component {
 
 
     return (
-      <Grid container key="home" onClick={this.confirmChange}>
-        <Grid item xs={12}>
-          <div>{formattedDay} {formattedDate}</div>
-          <p>{this.status}</p>
-          <p>{this.space}</p>
-          <hr/>
-        </Grid>
-      </Grid>
+      <div key="day" onClick={this.confirmChange} className={classes.dayView}>
+        <Typography variant="h6">{formattedDay} {formattedDate}</Typography>
+        <Typography variant="body1">{this.status}</Typography>
+        <Typography variant="body1">{this.space}</Typography>
+      </div>
     )
   }
 }
