@@ -8,6 +8,7 @@ import createHistory from 'history/createBrowserHistory';
 
 import { connect } from 'react-firebase';
 import Home from './Home';
+import Report from './Report';
 import Login from './Login';
 
 const history = createHistory();
@@ -42,6 +43,7 @@ const App = ({ value, addReservation, removeReservation }) => {
       <Router history={history}>
         <Switch>
           <Route path="/" exact render={(match) => <Home history={history} data={value} addReservation={addReservation} removeReservation={removeReservation} />} />
+          <Route path="/report" exact render={(match) => <Report history={history} data={value} />} />
           <Route path="/login" render={(match) => <Login history={history} data={value} />} />
           <Redirect to="/" />
         </Switch>

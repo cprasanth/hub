@@ -4,28 +4,46 @@ const functions = require('firebase-functions');
 // The Firebase Admin SDK to access the Firebase Realtime Database.
 const admin = require('firebase-admin');
 admin.initializeApp();
+const dateFns = require('date-fns');
 
-// Take the text parameter passed to this HTTP endpoint and insert it into the
-// Realtime Database under the path /messages/:pushId/original
-exports.addMessage = functions.https.onRequest((req, res) => {
-  // Grab the text parameter.
-  const original = req.query.text;
-  // Push the new message into the Realtime Database using the Firebase Admin SDK.
-  return admin.database().ref('/messages').push({ original: original }).then((snapshot) => {
-    // Redirect with 303 SEE OTHER to the URL of the pushed object in the Firebase console.
-    return res.redirect(303, snapshot.ref.toString());
+exports.allocateSpaces = functions.https.onRequest((req, res) => {
+  //TODO - Develop a better allocation logic
+  //1. consider the type of space
+  //2. Limit spaces per person per week
+  //3. Same space as last week etc.
+    return admin.database().ref('/atkins/infra').once('value', (snapshot) => {
+    const toDay = new Date();
+    const strtWeek = dateFns.addDays(dateFns.endOfWeek(toDay), 2);
+    const currentFolder = dateFns.format(strtWeek, "DDMMYYYY");
+    var allJSON = snapshot.val();
+
+    var spacesForPerson = {}
+    var doneAllocation = false;
+    for(var day in allJSON[currentFolder].requests){
+      for(var person in allJSON[currentFolder].requests[day]){
+        doneAllocation = false;
+        for(var spaceType in allJSON[currentFolder].status[day]){
+          for(var space in allJSON[currentFolder].status[day][spaceType]){
+            if(allJSON[currentFolder].status[day][spaceType][space]===""){
+              var pName = allJSON[currentFolder].requests[day][person];
+              allJSON[currentFolder].status[day][spaceType][space] = pName;
+              if(spacesForPerson[pName]){
+                spacesForPerson[pName] = spacesForPerson[pName]+1;
+              }else{
+                spacesForPerson[pName] = 1;
+              }
+              doneAllocation = true;
+              break;
+            }
+          } 
+          if(doneAllocation){
+            break;
+          }
+        }
+      }
+    }
+    return admin.database().ref('/atkins/infra/'+currentFolder+"/status").set(allJSON[currentFolder].status).then((snapshot) => {
+      return res.json(snapshot);
+    })
   });
-});
-// Listens for new messages added to /messages/:pushId/original and creates an
-// uppercase version of the message to /messages/:pushId/uppercase
-exports.makeUppercase = functions.database.ref('/messages/{pushId}/original')
-  .onCreate((snapshot, context) => {
-    // Grab the current value of what was written to the Realtime Database.
-    const original = snapshot.val();
-    console.log('Uppercasing', context.params.pushId, original);
-    const uppercase = original.toUpperCase();
-    // You must return a Promise when performing asynchronous tasks inside a Functions such as
-    // writing to the Firebase Realtime Database.
-    // Setting an "uppercase" sibling in the Realtime Database returns a Promise.
-    return snapshot.ref.parent.child('uppercase').set(uppercase);
-  });
+})

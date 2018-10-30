@@ -49,6 +49,13 @@ class DayView extends Component {
 
     if (data) {
       if (data[currentFolder]) {
+        if (data[currentFolder].requests[curDay]) {
+          for(let key in data[currentFolder].requests[curDay]){
+            if(data[currentFolder].requests[curDay][key]===this.state.currentUser){
+              this.status = "waitinglist";
+            }
+          }
+        }
         if (data[currentFolder].status[curDay]) {
           for(let key in data[currentFolder].status[curDay]){
             
@@ -66,13 +73,6 @@ class DayView extends Component {
 
           }
           
-        }
-        if (data[currentFolder].requests[curDay]) {
-          for(let key in data[currentFolder].requests[curDay]){
-            if(data[currentFolder].requests[curDay][key]===this.state.currentUser){
-              this.status = "waitinglist";
-            }
-          }
         }
       }
     }
