@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { withStyles } from '@material-ui/core/styles';
-import { Typography, Grid } from '@material-ui/core';
+import { Typography } from '@material-ui/core';
 import dateFns from 'date-fns';
 import DayView from './dayView';
 
@@ -19,7 +19,7 @@ class ThisWeek extends Component {
   }
   
   renderDays = () => {
-    const { classes, data, addReservation, removeReservation } = this.props;
+    const { data, addReservation, removeReservation } = this.props;
     const strtWeek = dateFns.startOfWeek(this.state.currentWeek);
     const days = []
     let i;
