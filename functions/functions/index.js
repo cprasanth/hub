@@ -22,7 +22,7 @@ exports.allocateSpaces = functions.https.onRequest((req, res) => {
     for(var day in allJSON[currentFolder].requests){
       for(var person in allJSON[currentFolder].requests[day]){
         doneAllocation = false;
-        for(var spaceType in allJSON[currentFolder].status[day]){
+        for(var spaceType in { "normal": {}, "double": {}, "edge": {} }){
           for(var space in allJSON[currentFolder].status[day][spaceType]){
             if(allJSON[currentFolder].status[day][spaceType][space]===""){
               var pName = allJSON[currentFolder].requests[day][person];
